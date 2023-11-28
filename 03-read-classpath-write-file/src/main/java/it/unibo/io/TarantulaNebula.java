@@ -21,5 +21,32 @@ public final class TarantulaNebula {
      */
     public static void main(final String[] args) {
         // Implement here. Add any other classes as desired, if needed.
+        if(args.length != 1) {
+            System.out.println(
+                "This application requires exactly one parameter (the destination directory) to work, but "
+                + args.length
+                + " were provided instead"
+                + (args.length == 0 ? "." : ": " + Arrays.asList(args))
+            );
+            System.exit(1);
+        }
+
+        final File destination = new File(args[0]);
+        if(!destination.exists() && !destination.mkdirs()){
+            System.out.println("Cannot create folder " + destination.toPath());
+            System.exit(2);
+        }
+
+        if(destination.isFile()){
+            System.out.println(destination.toPath() + " is a file, not a directory!");
+            System.exit(3);
+        }
+
+        for(final var resourceName: List.of("jwst-tarantula-nebula.jpg", "tarantula-nebula.md")){
+            Exporter.exportResourceAs(
+                getSystemResource(RESOURCE_PATH + resourceName),
+                new File(destination + File.separator + resourceName)
+            );
+        }
     }
 }
