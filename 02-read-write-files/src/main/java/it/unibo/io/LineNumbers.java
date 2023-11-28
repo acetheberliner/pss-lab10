@@ -27,5 +27,14 @@ public final class LineNumbers {
      * @throws IOException if something very bad happens to the file system while operating
      */
     public static void addLineNumbersToTextFile(final File file) throws IOException {
+        final var lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+        final var numberedLines = new ArrayList<String>(lines.size());
+        for(int lineNumber=1; lineNumber<=lines.size(); lineNumber+=1){
+            numberedLines.add(lineNumber + " " + lines.get(lineNumber - 1)); //aggiungo num e " space " alla riga, si fa -1 in quanto ArrayList è 0-based
+        }
+        final var destination = new File(
+            file.getParentFile().getAbsolutePath() + File.separator + "numbered-" + file.getName()
+        );
+        Files.write(destination.toPath(), numberedLines, StandardCharsets.UTF_8);
     }
 }
